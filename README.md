@@ -19,10 +19,7 @@ to start the container.
 docker run -d \
 --name=neon_gui \
 --network=host \
--v /tmp/neon:/tmp/neon:rw \
+-v ${NEON_CONFIG_DIR}:/config \
 neon_gui
 ```
-TODO: Gui service needs to get the skills QML
-
->*Note:* The above example assumes Docker data locations are specified in the `NEON_DATA_DIR` and `NEON_CONFIG_DIR`
-> environment variables.
+>*Note:* The above example assumes `NEON_CONFIG_DIR` contains valid configuration
