@@ -26,24 +26,25 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from threading import Event
+from ovos_utils import wait_for_exit_signal
 from neon_gui.service import NeonGUIService
 from neon_utils.configuration_utils import init_config_dir
 from neon_utils.log_utils import init_log
+
+from mycroft.lock import Lock
 
 
 def main(*args, **kwargs):
     init_config_dir()
     init_log(log_name="gui")
+
+    from mycroft.util import reset_sigint_handler
+    reset_sigint_handler()
+    Lock("gui")
+
     gui = NeonGUIService(*args, **kwargs)
     gui.start()
-    # TODO: Extract below logic to helper method in neon_utils DM
-    event = Event()
-    event.clear()
-    try:
-        event.wait()
-    except KeyboardInterrupt:
-        pass
+    wait_for_exit_signal()
     gui.shutdown()
 
 
